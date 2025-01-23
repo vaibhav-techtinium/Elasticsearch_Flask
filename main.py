@@ -23,6 +23,18 @@ def create_index():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route("/create-multiple-indexes", methods=['POST'])
+def create_multiple_indexes():
+    try:
+        indexes = request.json['indexes']
+        for index in indexes:
+            es.indices.create(index=index)
+        return jsonify({'message': 'indexes created'}), 200
+    except ApiError as e:
+        return jsonify(e.info), e.status_code
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+        
 @app.route("/list-indexes", methods=['GET'])
 def list_indexes():
     try:
